@@ -26,23 +26,6 @@ class Writer(object):
         }
 
 
-        self._dataset_header = [
-            'owner',#0
-            'repo',#1
-            'issue num',#2
-            'issue title',#3
-            'issue body',#4
-            'pull num',#5
-            'pull title',#6
-            'pull body',#7
-            'diff_url',#8
-            'base_sha',#9
-            'head_sha',#10
-            'num_modi_go',#11
-            'non_defective_code_url_list', #12
-            'defective_code_url_list' #13
-        ]
-
         if token is not None:
             self._headers['Authorization'] = 'token ' + token
         self._interrupted = False
@@ -232,13 +215,13 @@ class Writer(object):
     def writer(self,src_dir):
         repo_full_names = []
         repo_num_rows = []
-        total_num_rows = 0
         owner_repo_pairs = util.sorted_owner_repo_pairs(src_dir)
         num_repos = len(owner_repo_pairs)
         for i, (owner, repo) in enumerate(owner_repo_pairs):
             repo_full_name = '{}/{}'.format(owner, repo)
             repo_full_names.append(repo_full_name)
             repo_num_rows.append(0)
+            util.ensure_dir_exists('./result')
             dataset_path = util.ghpr_path_template.format(owner= owner, repo= repo)
             dataset_file =open(dataset_path,'w',newline='',encoding='UTF-8')
 
